@@ -1,0 +1,8 @@
+# Directories
+*/bin
+*/bin-int
+
+# Visual Studio Temp Files
+*.vs/
+*.vcxproj
+*.vcxproj.**
