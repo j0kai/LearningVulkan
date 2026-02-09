@@ -22,7 +22,6 @@ group""
 
 project "LearningVulkan"
     location "LearningVulkan"
-    kind "StaticLib"
     language "C++"
     cppdialect "C++20"
     staticruntime "on"
