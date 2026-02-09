@@ -14,22 +14,24 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 IncludeDir = {}
 IncludeDir["GLFW"] = "LearningVulkan/vendor/GLFW/include"
 IncludeDir["glm"] = "LearningVulkan/vendor/glm"
+IncludeDir["Vulkan"] = "$(VULKAN_SDK)/Include"
 
-group "Dependencies"
+group"Dependencies"
     include "LearningVulkan/vendor/GLFW"
 
-group""
-
 project "LearningVulkan"
-    location "LearningVulkan"
-    language "C++"
-    cppdialect "C++20"
-    staticruntime "on"
+  location "LearningVulkan"
+  kind "ConsoleApp"
+  language "C++"
+  cppdialect "C++20"
+  staticruntime "on"
 
-    targetdir ("bin/" .. outputdir .. "/%{prj.name}")
-    objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+  targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+  objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
-    files 
+  libdirs {"$(VULKAN_SDK)/Lib"}
+  
+  files 
     { 
       "%{prj.name}/src/**.h", 
       "%{prj.name}/src/**.cpp",
@@ -42,11 +44,13 @@ project "LearningVulkan"
       "%{prj.name}/src",
       "%{IncludeDir.GLFW}",
       "%{IncludeDir.glm}",
+      "%{IncludeDir.Vulkan}"
     }
 
     links
     {
       "GLFW",
+      "vulkan-1.lib"
     }
 
     defines
