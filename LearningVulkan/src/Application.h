@@ -7,6 +7,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <cstdlib>
+#include <vector>
 
 struct WindowSpecification {
 	uint32_t Width = 800;
@@ -27,10 +28,23 @@ private:
 	void Update();
 	void Cleanup();
 
-	void CreateInstance();
+	void CreateInstance(bool listAvailableExtensions = false);
+
+	void ShowAvailableExtensions();
+	bool CheckValidationLayerSupport();
 private:
 	WindowSpecification m_WindowSpec;
 	GLFWwindow* m_Window;
 
 	VkInstance m_Instance;
+
+	const std::vector<const char*> m_ValidationLayers = {
+		"VK_LAYER_KHRONOS_validation"
+	};
+
+#ifdef LV_DEBUG
+	const bool m_EnableValidationLayers = true;
+#else
+	const bool m_EnableValidationLayers = false;
+#endif
 };
