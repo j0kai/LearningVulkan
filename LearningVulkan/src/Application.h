@@ -54,7 +54,7 @@ private:
 	GLFWwindow* m_Window;
 
 	VkInstance m_Instance;
-	VkDebugUtilsMessengerEXT m_DebugMessenger;
+	VkDebugUtilsMessengerEXT m_DebugMessenger = VK_NULL_HANDLE;
 
 	const std::vector<const char*> m_ValidationLayers = {
 		"VK_LAYER_KHRONOS_validation"
