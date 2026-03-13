@@ -64,6 +64,9 @@ private:
 	bool IsDeviceSuitable(VkPhysicalDevice device);
 	QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device);
 
+	// Logical Device Creation
+	void CreateLogicalDevice();
+
 private:
 	WindowSpecification m_WindowSpec;
 	GLFWwindow* m_Window;
@@ -72,6 +75,8 @@ private:
 	VkDebugUtilsMessengerEXT m_DebugMessenger = VK_NULL_HANDLE;
 
 	VkPhysicalDevice m_PhysicalDevice = VK_NULL_HANDLE;
+	VkDevice m_Device;
+	VkQueue m_GraphicsQueue;
 
 	const std::vector<const char*> m_ValidationLayers = {
 		"VK_LAYER_KHRONOS_validation"
