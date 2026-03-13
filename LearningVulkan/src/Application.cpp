@@ -33,6 +33,7 @@ void Application::InitVulkan()
 	bool listAvailableExtensions = true;
 	CreateInstance(listAvailableExtensions);
 	SetupDebugMessenger();
+	PickPhysicalDevice();
 }
 
 void Application::Update()
@@ -222,4 +223,52 @@ void Application::DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtil
 	if (func != nullptr) {
 		func(m_Instance, debugMessenger, pAllocator);
 	}
+}
+
+void Application::PickPhysicalDevice()
+{
+	uint32_t deviceCount = 0;
+	vkEnumeratePhysicalDevices(m_Instance, &deviceCount, nullptr);
+
+	if (deviceCount == 0) {
+		throw std::runtime_error("Failed to find GPUs with Vulkan support!");
+	}
+
+	std::vector<VkPhysicalDevice> devices(deviceCount);
+	vkEnumeratePhysicalDevices(m_Instance, &deviceCount, devices.data());
+
+	for (const auto& device : devices) {
+		if (IsDeviceSuitable(device)) {
+			m_PhysicalDevice = device;
+			break;
+		}
+	}
+
+	if (m_PhysicalDevice == VK_NULL_HANDLE) {
+		throw std::runtime_error("Failed to find a suitable GPU!");
+	}
+}
+
+/// <summary>
+/// Evaluates a physical device and checks if it meets the requirements of the application.
+/// In a real application, you would likely want to check for many more features and properties,
+/// such as support for specific queue families, required device extensions, swap chain support, etc.
+/// However, for this project, we will just consider any device suitable, as long as it supports Vulkan.
+/// </summary>
+bool Application::IsDeviceSuitable(VkPhysicalDevice device)
+{
+	/* 
+	Example criteria for suitability (device type and support for geometry shaders):
+	
+	VkPhysicalDeviceProperties deviceProperties;
+	vkGetPhysicalDeviceProperties(device, &deviceProperties);
+	
+	// Check support for optional features like texture compression, 64 bit floats, multi-viewport rendering, etc.
+	VkPhysicalDeviceFeatures deviceFeatures;
+	vkGetPhysicalDeviceFeatures(device, &deviceFeatures);
+
+	return deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU && deviceFeatures.geometryShader;
+	*/
+
+	return true;
 }

@@ -49,12 +49,17 @@ private:
 		VkDebugUtilsMessengerEXT debugMessenger, 
 		const VkAllocationCallbacks* pAllocator);
 
+	void PickPhysicalDevice();
+	bool IsDeviceSuitable(VkPhysicalDevice device);
+
 private:
 	WindowSpecification m_WindowSpec;
 	GLFWwindow* m_Window;
 
 	VkInstance m_Instance;
 	VkDebugUtilsMessengerEXT m_DebugMessenger = VK_NULL_HANDLE;
+
+	VkPhysicalDevice m_PhysicalDevice = VK_NULL_HANDLE;
 
 	const std::vector<const char*> m_ValidationLayers = {
 		"VK_LAYER_KHRONOS_validation"
