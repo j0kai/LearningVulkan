@@ -8,10 +8,19 @@
 #include <stdexcept>
 #include <cstdlib>
 #include <vector>
+#include <optional>
 
 struct WindowSpecification {
 	uint32_t Width = 800;
 	uint32_t Height = 600;
+};
+
+struct QueueFamilyIndices {
+	std::optional<uint32_t> graphicsFamily;
+
+	bool IsComplete() {
+		return graphicsFamily.has_value();
+	}
 };
 
 class Application
@@ -34,6 +43,7 @@ private:
 	std::vector<const char*> GetRequiredExtensions();
 	bool CheckValidationLayerSupport();
 
+	// Debug Messenger
 	static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(
 		VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
 		VkDebugUtilsMessageTypeFlagsEXT messageType,
@@ -49,8 +59,10 @@ private:
 		VkDebugUtilsMessengerEXT debugMessenger, 
 		const VkAllocationCallbacks* pAllocator);
 
+	// Physical Device Selection
 	void PickPhysicalDevice();
 	bool IsDeviceSuitable(VkPhysicalDevice device);
+	QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device);
 
 private:
 	WindowSpecification m_WindowSpec;

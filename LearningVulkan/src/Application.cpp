@@ -251,24 +251,36 @@ void Application::PickPhysicalDevice()
 
 /// <summary>
 /// Evaluates a physical device and checks if it meets the requirements of the application.
-/// In a real application, you would likely want to check for many more features and properties,
-/// such as support for specific queue families, required device extensions, swap chain support, etc.
-/// However, for this project, we will just consider any device suitable, as long as it supports Vulkan.
 /// </summary>
 bool Application::IsDeviceSuitable(VkPhysicalDevice device)
 {
-	/* 
-	Example criteria for suitability (device type and support for geometry shaders):
-	
-	VkPhysicalDeviceProperties deviceProperties;
-	vkGetPhysicalDeviceProperties(device, &deviceProperties);
-	
-	// Check support for optional features like texture compression, 64 bit floats, multi-viewport rendering, etc.
-	VkPhysicalDeviceFeatures deviceFeatures;
-	vkGetPhysicalDeviceFeatures(device, &deviceFeatures);
+	QueueFamilyIndices indices = FindQueueFamilies(device);
 
-	return deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU && deviceFeatures.geometryShader;
-	*/
+	return indices.IsComplete();
+}
 
-	return true;
+QueueFamilyIndices Application::FindQueueFamilies(VkPhysicalDevice device)
+{
+	QueueFamilyIndices indices;
+
+	uint32_t queueFamilyCount = 0;
+	vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, nullptr);
+
+	std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
+	vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, queueFamilies.data());
+
+	int i = 0;
+	for (const auto& queueFamily : queueFamilies) {
+		if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT) {
+			indices.graphicsFamily = i;
+		}
+
+		if(indices.IsComplete()) {
+			break;
+		}
+
+		i++;
+	}
+
+	return indices;
 }
