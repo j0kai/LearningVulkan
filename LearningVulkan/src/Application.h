@@ -9,6 +9,7 @@
 #include <cstdlib>
 #include <vector>
 #include <optional>
+#include <set>
 
 struct WindowSpecification {
 	uint32_t Width = 800;
@@ -17,9 +18,10 @@ struct WindowSpecification {
 
 struct QueueFamilyIndices {
 	std::optional<uint32_t> graphicsFamily;
+	std::optional<uint32_t> presentFamily;
 
 	bool IsComplete() {
-		return graphicsFamily.has_value();
+		return graphicsFamily.has_value() && presentFamily.has_value();
 	}
 };
 
@@ -59,6 +61,8 @@ private:
 		VkDebugUtilsMessengerEXT debugMessenger, 
 		const VkAllocationCallbacks* pAllocator);
 
+	void CreateSurface();
+
 	// Physical Device Selection
 	void PickPhysicalDevice();
 	bool IsDeviceSuitable(VkPhysicalDevice device);
@@ -73,6 +77,9 @@ private:
 
 	VkInstance m_Instance;
 	VkDebugUtilsMessengerEXT m_DebugMessenger = VK_NULL_HANDLE;
+
+	VkSurfaceKHR m_Surface;
+	VkQueue m_PresentQueue;
 
 	VkPhysicalDevice m_PhysicalDevice = VK_NULL_HANDLE;
 	VkDevice m_Device;
