@@ -25,6 +25,12 @@ struct QueueFamilyIndices {
 	}
 };
 
+struct SwapChainSupportDetails {
+	VkSurfaceCapabilitiesKHR capabilities;
+	std::vector<VkSurfaceFormatKHR> formats;
+	std::vector<VkPresentModeKHR> presentModes;
+};
+
 class Application
 {
 public:
@@ -71,6 +77,10 @@ private:
 	// Logical Device Creation
 	void CreateLogicalDevice();
 
+	bool CheckDeviceExtensionSupport(VkPhysicalDevice device);
+
+	SwapChainSupportDetails QuerySwapChainSupport(VkPhysicalDevice device);
+
 private:
 	WindowSpecification m_WindowSpec;
 	GLFWwindow* m_Window;
@@ -87,6 +97,10 @@ private:
 
 	const std::vector<const char*> m_ValidationLayers = {
 		"VK_LAYER_KHRONOS_validation"
+	};
+
+	const std::vector<const char*> m_DeviceExtensions = {
+		VK_KHR_SWAPCHAIN_EXTENSION_NAME
 	};
 
 #ifdef LV_DEBUG
