@@ -10,6 +10,9 @@
 #include <vector>
 #include <optional>
 #include <set>
+#include <cstdint>
+#include <limits> 
+#include <algorithm> 
 
 struct WindowSpecification {
 	uint32_t Width = 800;
@@ -79,7 +82,13 @@ private:
 
 	bool CheckDeviceExtensionSupport(VkPhysicalDevice device);
 
+	// Swap Chain Support & Settings
 	SwapChainSupportDetails QuerySwapChainSupport(VkPhysicalDevice device);
+	VkSurfaceFormatKHR ChooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
+	VkPresentModeKHR ChooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
+	VkExtent2D ChooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
+
+	void CreateSwapChain();
 
 private:
 	WindowSpecification m_WindowSpec;
@@ -94,6 +103,11 @@ private:
 	VkPhysicalDevice m_PhysicalDevice = VK_NULL_HANDLE;
 	VkDevice m_Device;
 	VkQueue m_GraphicsQueue;
+
+	VkSwapchainKHR m_SwapChain;
+	std::vector<VkImage> m_SwapChainImages;
+	VkFormat m_SwapChainImageFormat;
+	VkExtent2D m_SwapChainExtent;
 
 	const std::vector<const char*> m_ValidationLayers = {
 		"VK_LAYER_KHRONOS_validation"
