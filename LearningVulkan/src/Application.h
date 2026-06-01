@@ -91,6 +91,9 @@ private:
 	void CreateSwapChain();
 	void CreateImageViews();
 
+	// Graphics Pipeline
+	void CreateGraphicsPipeline();
+
 private:
 	WindowSpecification m_WindowSpec;
 	GLFWwindow* m_Window;
