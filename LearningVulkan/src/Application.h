@@ -93,6 +93,7 @@ private:
 
 	// Graphics Pipeline
 	void CreateGraphicsPipeline();
+	void CreateRenderPass();
 
 private:
 	WindowSpecification m_WindowSpec;
@@ -113,6 +114,11 @@ private:
 	VkFormat m_SwapChainImageFormat;
 	VkExtent2D m_SwapChainExtent;
 	std::vector<VkImageView> m_SwapChainImageViews;
+
+	VkRenderPass m_RenderPass;
+	VkPipelineLayout m_PipelineLayout;
+
+	VkPipeline m_GraphicsPipeline;
 
 	const std::vector<const char*> m_ValidationLayers = {
 		"VK_LAYER_KHRONOS_validation"
