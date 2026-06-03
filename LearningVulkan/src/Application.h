@@ -103,6 +103,8 @@ private:
 
 	void DrawFrame();
 
+	void CreateSyncObjects();
+
 private:
 	WindowSpecification m_WindowSpec;
 	GLFWwindow* m_Window;
@@ -132,6 +134,10 @@ private:
 
 	VkCommandPool m_CommandPool;
 	VkCommandBuffer m_CommandBuffer;
+
+	VkSemaphore m_ImageAvailableSemaphore;
+	VkSemaphore m_RenderFinishedSemaphore;
+	VkFence m_InFlightFence;
 
 	const std::vector<const char*> m_ValidationLayers = {
 		"VK_LAYER_KHRONOS_validation"
