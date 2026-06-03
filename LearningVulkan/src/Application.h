@@ -8,10 +8,30 @@
 #include <stdexcept>
 #include <cstdlib>
 #include <vector>
+#include <optional>
+#include <set>
+#include <cstdint>
+#include <limits> 
+#include <algorithm> 
 
 struct WindowSpecification {
 	uint32_t Width = 800;
 	uint32_t Height = 600;
+};
+
+struct QueueFamilyIndices {
+	std::optional<uint32_t> graphicsFamily;
+	std::optional<uint32_t> presentFamily;
+
+	bool IsComplete() {
+		return graphicsFamily.has_value() && presentFamily.has_value();
+	}
+};
+
+struct SwapChainSupportDetails {
+	VkSurfaceCapabilitiesKHR capabilities;
+	std::vector<VkSurfaceFormatKHR> formats;
+	std::vector<VkPresentModeKHR> presentModes;
 };
 
 class Application
@@ -34,6 +54,7 @@ private:
 	std::vector<const char*> GetRequiredExtensions();
 	bool CheckValidationLayerSupport();
 
+	// Debug Messenger
 	static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(
 		VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
 		VkDebugUtilsMessageTypeFlagsEXT messageType,
@@ -49,6 +70,41 @@ private:
 		VkDebugUtilsMessengerEXT debugMessenger, 
 		const VkAllocationCallbacks* pAllocator);
 
+	void CreateSurface();
+
+	// Physical Device Selection
+	void PickPhysicalDevice();
+	bool IsDeviceSuitable(VkPhysicalDevice device);
+	QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device);
+
+	// Logical Device Creation
+	void CreateLogicalDevice();
+
+	bool CheckDeviceExtensionSupport(VkPhysicalDevice device);
+
+	// Swap Chain Support & Settings
+	SwapChainSupportDetails QuerySwapChainSupport(VkPhysicalDevice device);
+	VkSurfaceFormatKHR ChooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
+	VkPresentModeKHR ChooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
+	VkExtent2D ChooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
+
+	void CreateSwapChain();
+	void CreateImageViews();
+
+	// Graphics Pipeline
+	void CreateGraphicsPipeline();
+	void CreateRenderPass();
+
+	void CreateFramebuffers();
+
+	void CreateCommandPool();
+	void CreateCommandBuffer();
+	void RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
+
+	void DrawFrame();
+
+	void CreateSyncObjects();
+
 private:
 	WindowSpecification m_WindowSpec;
 	GLFWwindow* m_Window;
@@ -56,8 +112,39 @@ private:
 	VkInstance m_Instance;
 	VkDebugUtilsMessengerEXT m_DebugMessenger = VK_NULL_HANDLE;
 
+	VkSurfaceKHR m_Surface;
+	VkQueue m_PresentQueue;
+
+	VkPhysicalDevice m_PhysicalDevice = VK_NULL_HANDLE;
+	VkDevice m_Device;
+	VkQueue m_GraphicsQueue;
+
+	VkSwapchainKHR m_SwapChain;
+	std::vector<VkImage> m_SwapChainImages;
+	VkFormat m_SwapChainImageFormat;
+	VkExtent2D m_SwapChainExtent;
+	std::vector<VkImageView> m_SwapChainImageViews;
+
+	VkRenderPass m_RenderPass;
+	VkPipelineLayout m_PipelineLayout;
+
+	VkPipeline m_GraphicsPipeline;
+
+	std::vector<VkFramebuffer> m_SwapChainFramebuffers;
+
+	VkCommandPool m_CommandPool;
+	VkCommandBuffer m_CommandBuffer;
+
+	VkSemaphore m_ImageAvailableSemaphore;
+	VkSemaphore m_RenderFinishedSemaphore;
+	VkFence m_InFlightFence;
+
 	const std::vector<const char*> m_ValidationLayers = {
 		"VK_LAYER_KHRONOS_validation"
+	};
+
+	const std::vector<const char*> m_DeviceExtensions = {
+		VK_KHR_SWAPCHAIN_EXTENSION_NAME
 	};
 
 #ifdef LV_DEBUG
