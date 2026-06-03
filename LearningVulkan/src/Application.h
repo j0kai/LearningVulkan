@@ -101,6 +101,8 @@ private:
 	void CreateCommandBuffer();
 	void RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
 
+	void DrawFrame();
+
 private:
 	WindowSpecification m_WindowSpec;
 	GLFWwindow* m_Window;

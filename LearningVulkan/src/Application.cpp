@@ -52,6 +52,7 @@ void Application::Update()
 	while (!glfwWindowShouldClose(m_Window))
 	{
 		glfwPollEvents();
+		DrawFrame();
 	}
 }
 
@@ -869,5 +870,10 @@ void Application::RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t im
 	if (vkEndCommandBuffer(m_CommandBuffer) != VK_SUCCESS) {
 		throw std::runtime_error("Failed to record command buffer!");
 	}
+}
+
+void Application::DrawFrame()
+{
+
 }
 
