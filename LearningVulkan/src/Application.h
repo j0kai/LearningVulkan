@@ -95,6 +95,12 @@ private:
 	void CreateGraphicsPipeline();
 	void CreateRenderPass();
 
+	void CreateFramebuffers();
+
+	void CreateCommandPool();
+	void CreateCommandBuffer();
+	void RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
+
 private:
 	WindowSpecification m_WindowSpec;
 	GLFWwindow* m_Window;
@@ -119,6 +125,11 @@ private:
 	VkPipelineLayout m_PipelineLayout;
 
 	VkPipeline m_GraphicsPipeline;
+
+	std::vector<VkFramebuffer> m_SwapChainFramebuffers;
+
+	VkCommandPool m_CommandPool;
+	VkCommandBuffer m_CommandBuffer;
 
 	const std::vector<const char*> m_ValidationLayers = {
 		"VK_LAYER_KHRONOS_validation"
